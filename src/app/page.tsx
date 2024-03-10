@@ -18,7 +18,7 @@ export default function Home() {
     </section>
 
 <div className={styles.grouper}>
-  <h1 className={styles.title}>ALL BOOKS</h1>
+  <h1 className={styles.title}>ALL programming</h1>
   <ul className={styles.ulGroupStyle}>
     {
       books.map((book,i)=>
