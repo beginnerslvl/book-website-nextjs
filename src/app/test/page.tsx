@@ -2,7 +2,7 @@
 import BookCard from '@/components/BookCard'
 import Header from '@/components/Header'
 import SideBar from '@/components/SideBar'
-import { books } from '@/constants/mockData'
+import { books } from './mockData'
 import { motion } from 'framer-motion'
 import styles from '../page.module.css'
 export default function Home() {
