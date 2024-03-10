@@ -1,82 +1,42 @@
-"use client"
-import { books } from "@/constants/mockData"
-import '@fortawesome/fontawesome-free/css/all.min.css'
-import { motion } from 'framer-motion'
-import { useParams } from "next/navigation"
-import { useEffect } from "react"
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { Editor, useDomValue } from "reactjs-editor"
-import styles from './book.module.css'
+// src/app/programming.tsx
+import { books } from '@/constants/mockData';
+import BookCard from '@/components/BookCard';
+import Header from '@/components/Header';
+import SideBar from '@/components/SideBar';
+import { motion } from 'framer-motion';
+import styles from './page.module.css';
 
-export default function BookPage() {
-   const {id} = useParams()
-
-   const { dom, setDom } = useDomValue();
-
-   const selectedBook = books.filter((book,i)=>{
-    return id === String(book.id)
-   })
-   const notify = () => toast("Your changes has been saved!!");
-
-   const handleSave= ()=>{
-    const updatedDomValue  = {
-        key: dom?.key,
-        props: dom?.props,
-        ref: dom?.ref,
-        type: dom?.type,
-      }
-
-      localStorage.setItem(`dom${selectedBook[0].id}`,JSON.stringify(updatedDomValue))
-      notify()
-   }
-
-   useEffect(()=>{
-    const savedDom = localStorage.getItem(`dom${selectedBook[0].id}`) 
-    if(savedDom){
-        setDom(JSON.parse(savedDom))
-    }
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-   },[])
-
-
-   if(!selectedBook.length) return <p>Book not found</p>
+export default function Programming() {
+  const programmingBooks = books.filter(book => book.title.toLowerCase().includes('programming'));
 
   return (
-    <motion.div transition={{ type: 'spring', damping: 40, mass: 0.75 }}
-    initial={{ opacity: 0, x: 1000 }} animate={{ opacity: 1, x: 0 }}>
-     <motion.section transition={{ type: 'spring', damping: 44, mass: 0.75 }}
-            initial={{ opacity: 0, y: -1000 }} animate={{ opacity: 1, y: 0 }} className={styles.appBar}>
-     <div className={styles.leftIcons} >
-    <i style={{fontSize:'20px',cursor:'pointer'}} className="fas fa-chevron-left"></i> 
-    </div>
-  <div className={styles.title}>  <h2 className={styles.titleStyles}> {selectedBook[0].title}</h2></div>
-  <div className={styles.icons}>
-    <button className={styles.saveButton} onClick={handleSave} >Save</button>
-    <i style={iconStyle} className="fas fa-cog"></i> 
-    <i style={iconStyle} className="fas fa-share"></i> 
-    <i style={iconStyle} className="fas fa-search"></i> 
-  </div>
-  </motion.section>
-
-  <Editor
-        /** htmlContent accepts only one element. Just wrap everything on one element **/
-        htmlContent={`
-        <main className="bookContainer">
-    <aside>
-    <h1 className="center">${selectedBook[0].title} </h1>
-    <span className="center small"> By ${selectedBook[0].author} </span>
-    ${selectedBook[0].content}
-    </aside>
-        </main>
-        `
-              }
-      />
-       <ToastContainer />
-
-  </motion.div>
-  )
+    <main className={styles.main}>
+      <div>
+        <Header />
+        <div className={styles.containerStyle}>
+          <section className={styles.content}>
+            <SideBar />
+          </section>
+          <div className={styles.grouper}>
+            <h1 className={styles.title}>Programming Books</h1>
+            <ul className={styles.ulGroupStyle}>
+              {programmingBooks.map((book, i) => (
+                <motion.li
+                  key={i}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', damping: 50, mass: 0.75 }}
+                  initial={{ opacity: 0, x: 200 * (i + 1) }}
+                  animate={{ opacity: 1, x: 0 }}>
+                  <a href={`/book/${book.id}`} style={{ textDecoration: 'none' }}>
+                    <BookCard title={book.title} coverImage={book.image} description={book.description} />
+                  </a>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }
-
-
-const iconStyle ={marginRight:'20px',fontSize:'20px'}
