@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import styles from './page.module.css';
 
 export default function Programming() {
-  const programmingBooks = books.filter(book => book.category === 'Programming');
+  const programmingBooks = books.filter(book => book.title.toLowerCase().includes('programming'));
 
   return (
     <main className={styles.main}>
